@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gate 3 — Unwrap</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,600&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav id="flags"></nav>
+
+<main class="wrap">
+  <p class="eyebrow"></p>
+  <h1 style="font-size:34px">Unwrap them.</h1>
+  <p class="hint">Drag your finger to tear the paper off.</p>
+
+  <div class="gift">
+    <img id="photo" alt="">
+    <canvas id="paper" width="320" height="320"></canvas>
+  </div>
+  <p class="serif" id="caption" style="font-size:17px;min-height:26px"></p>
+  <p class="hint" id="progress"></p>
+
+  <div class="card" id="cleared" hidden>
+    <p class="cleared-text"></p>
+    <a class="btn" href="#">Next gate</a>
+  </div>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+Prog.guard();
+start();
+
+const photos = CONFIG.photos;
+const img = document.getElementById("photo");
+const cap = document.getElementById("caption");
+const note = document.getElementById("progress");
+const cv = document.getElementById("paper");
+const ctx = cv.getContext("2d");
+
+let index = 0, layer = 0, drawing = false;
+// The last gift is wrapped twice. Because of course it is.
+const layersFor = i => (i === photos.length - 1 ? 2 : 1);
+
+function wrap() {
+  const shades = ["#FF5FA2", "#7B5BFF", "#6FE3C1"];
+  ctx.globalCompositeOperation = "source-over";
+  ctx.fillStyle = shades[(index + layer) % 3];
+  ctx.fillRect(0, 0, 320, 320);
+  ctx.fillStyle = "rgba(255,255,255,.35)";
+  for (let y = -320; y < 320; y += 26) {
+    ctx.save(); ctx.translate(0, y); ctx.rotate(-0.4);
+    ctx.fillRect(-40, 0, 500, 10); ctx.restore();
+  }
+  ctx.globalCompositeOperation = "destination-out";
+}
+
+function load() {
+  img.src = photos[index].src;
+  img.alt = photos[index].caption;
+  cap.textContent = "";
+  layer = 0;
+  wrap();
+  note.textContent = "Gift " + (index + 1) + " of " + photos.length
+    + (layersFor(index) > 1 ? " — this one feels thick" : "");
+}
+
+function scratch(e) {
+  if (!drawing) return;
+  const r = cv.getBoundingClientRect();
+  const x = (e.clientX - r.left) * 320 / r.width;
+  const y = (e.clientY - r.top) * 320 / r.height;
+  ctx.beginPath(); ctx.arc(x, y, 26, 0, 7); ctx.fill();
+}
+
+cv.addEventListener("pointerdown", e => { drawing = true; cv.setPointerCapture(e.pointerId); scratch(e); });
+cv.addEventListener("pointermove", scratch);
+cv.addEventListener("pointerup", () => { drawing = false; check(); });
+
+function cleared() {
+  const d = ctx.getImageData(0, 0, 320, 320).data;
+  let clear = 0;
+  for (let i = 3; i < d.length; i += 40) if (d[i] < 40) clear++;
+  return clear / (d.length / 40);
+}
+
+function check() {
+  if (cleared() < 0.55) return;
+  if (++layer < layersFor(index)) { note.textContent = "There's another layer. Sorry."; wrap(); return; }
+
+  ctx.clearRect(0, 0, 320, 320);
+  cap.textContent = photos[index].caption;
+
+  if (index + 1 < photos.length) {
+    note.textContent = "Next one.";
+    setTimeout(() => { index++; load(); }, 1400);
+  } else {
+    note.textContent = "";
+    clearGate("Every photo, unwrapped. No takebacks.");
+  }
+}
+
+load();
+</script>
+</body>
+</html>

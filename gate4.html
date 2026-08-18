@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gate 4 — One question</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,600&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav id="flags"></nav>
+
+<main class="wrap">
+  <p class="eyebrow"></p>
+  <h1 style="font-size:34px">One question.</h1>
+  <p class="hint" style="font-size:17px;color:var(--ink)">Who is the best person alive?</p>
+
+  <div class="answers" id="answers"></div>
+  <p class="hint" id="taunt"></p>
+
+  <div class="card" id="cleared" hidden>
+    <p class="cleared-text"></p>
+    <a class="btn" href="#">Open the wall</a>
+  </div>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+Prog.guard();
+start();
+
+const box = document.getElementById("answers");
+const taunt = document.getElementById("taunt");
+const WRONG = ["Also you", "Still you", "Honestly, you", "Me"];
+let scale = 1, tries = 0;
+
+// The right answer.
+const right = document.createElement("button");
+right.className = "ans right";
+right.textContent = CONFIG.name;
+right.style.width = "200px";
+right.style.height = "70px";
+right.style.fontSize = "20px";
+right.onclick = () => {
+  taunt.textContent = "";
+  clearGate("Correct. It was never going to be anyone else.");
+  box.querySelectorAll(".ans").forEach(b => b.disabled = true);
+};
+box.appendChild(right);
+
+// The wrong ones, which cannot be caught and know they are wrong.
+WRONG.forEach((label, i) => {
+  const b = document.createElement("button");
+  b.className = "ans";
+  b.textContent = label;
+  b.dataset.size = 1;
+  b.style.width = "110px";
+  b.style.height = "40px";
+  b.style.fontSize = "13px";
+  b.style.left = (10 + (i % 2) * 48) + "%";
+  b.style.top = (35 + Math.floor(i / 2) * 30) + "%";
+  const flee = () => shrink(b);
+  b.addEventListener("pointerenter", flee);
+  b.addEventListener("click", flee);
+  box.appendChild(b);
+});
+
+function shrink(b) {
+  const size = Math.max(0.25, (b.dataset.size *= 0.72));
+  b.dataset.size = size;
+  b.style.width = 110 * size + "px";
+  b.style.height = 40 * size + "px";
+  b.style.fontSize = 13 * size + "px";
+  b.style.left = (5 + Math.random() * 70) + "%";
+  b.style.top = (28 + Math.random() * 55) + "%";
+  if (size <= 0.3) b.style.opacity = 0.3;
+
+  grow();
+  taunt.textContent = ["Hm.", "That one ran away.", "It doesn't want to be picked.",
+                       "You're making this harder than it is."][tries % 4];
+}
+
+function grow() {
+  scale = Math.min(2.1, scale + 0.16);
+  tries++;
+  right.style.width = Math.min(300, 200 * scale) + "px";
+  right.style.height = 70 * Math.min(1.7, scale) + "px";
+  right.style.fontSize = Math.min(38, 20 * scale) + "px";
+}
+</script>
+</body>
+</html>

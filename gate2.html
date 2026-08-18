@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gate 2 — Balloons</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,600&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav id="flags"></nav>
+
+<main class="wrap">
+  <p class="eyebrow"></p>
+  <h1 style="font-size:34px">Pop them all.</h1>
+  <p class="hint">Each one is hiding a letter.</p>
+
+  <div class="sky" id="sky"></div>
+  <p class="spelled" id="spelled"></p>
+  <p class="hint" id="taunt"></p>
+
+  <div class="card" id="cleared" hidden>
+    <p class="cleared-text"></p>
+    <a class="btn" href="#">Next gate</a>
+  </div>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+Prog.guard();
+start();
+
+const LETTERS = CONFIG.name.toUpperCase().replace(/[^A-Z]/g, "").split("");
+const COLORS = ["#FF5FA2", "#FFD93D", "#6FE3C1", "#7B5BFF", "#2B1B44"];
+const sky = document.getElementById("sky");
+const out = document.getElementById("spelled");
+const taunt = document.getElementById("taunt");
+
+// One balloon refuses to be caught — until it doesn't.
+const RUNNER = Math.floor(Math.random() * LETTERS.length);
+let dodges = 0, popped = 0;
+const found = LETTERS.map(() => "_");
+
+LETTERS.forEach((letter, i) => {
+  const b = document.createElement("button");
+  b.className = "balloon";
+  b.textContent = letter;
+  b.style.background = COLORS[i % COLORS.length];
+  b.style.color = COLORS[i % COLORS.length] === "#FFD93D" ? "#2B1B44" : "#fff";
+  place(b, i);
+  b.onclick = () => (i === RUNNER && dodges < 8) ? dodge(b) : pop(b, i);
+  sky.appendChild(b);
+});
+
+function place(b, i) {
+  b.style.left = (10 + (i % 4) * 22 + Math.random() * 8) + "%";
+  b.style.top  = (10 + Math.floor(i / 4) * 34 + Math.random() * 10) + "%";
+}
+
+function dodge(b) {
+  dodges++;
+  b.style.left = (5 + Math.random() * 75) + "%";
+  b.style.top  = (5 + Math.random() * 70) + "%";
+  taunt.textContent = dodges < 8
+    ? ["Missed.", "Not even close.", "It saw that coming.", "Try harder."][dodges % 4]
+    : "Fine. It's tired. Tap it.";
+}
+
+function pop(b, i) {
+  if (b.classList.contains("gone")) return;
+  b.classList.add("gone");
+  found[i] = LETTERS[i];
+  out.textContent = found.join(" ");
+  if (++popped === LETTERS.length) {
+    taunt.textContent = "";
+    clearGate("That is your name. We checked.");
+  }
+}
+
+out.textContent = found.join(" ");
+</script>
+</body>
+</html>

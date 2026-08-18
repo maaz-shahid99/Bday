@@ -1,0 +1,8 @@
+# stale export of an older version of the site
+birthday-site.zip
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/

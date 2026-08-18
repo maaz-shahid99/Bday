@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gate 4 — Catch</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,600&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav id="flags"></nav>
+
+<main class="wrap">
+  <p class="eyebrow"></p>
+  <h1 style="font-size:34px">Catch five.</h1>
+  <p class="hint">Slide the basket. Arrow keys work too.</p>
+
+  <canvas class="catch-stage" id="stage" width="320" height="380"
+          tabindex="0" aria-label="Catch the falling presents"></canvas>
+  <p class="hint" id="status" style="margin-top:16px">0 of 5 caught</p>
+
+  <div class="card" id="cleared" hidden>
+    <p class="cleared-text"></p>
+    <a class="btn" href="#">Next gate</a>
+  </div>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+Prog.guard();
+start();
+
+const W = 320, H = 380, NEED = 5;
+const FLOOR = H - 34, BASKET_H = 18;
+const COLORS = ["#FF5FA2", "#FFD93D", "#6FE3C1", "#7B5BFF"];
+
+const cv = document.getElementById("stage");
+const ctx = cv.getContext("2d");
+const status = document.getElementById("status");
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Reduced motion gets the endgame conditions from the very first frame.
+let basketW = calm ? 240 : 70;
+let speed   = calm ? 1.1 : 2.7;
+let basketX = W / 2, caught = 0, missed = 0, over = false, raf = 0, spawn = 0;
+let gifts = [];
+
+const clampBasket = () => {
+  basketX = Math.max(basketW / 2, Math.min(W - basketW / 2, basketX));
+};
+
+/* --- steering --- */
+function aimAt(clientX) {
+  const r = cv.getBoundingClientRect();
+  basketX = (clientX - r.left) * (W / r.width);
+  clampBasket();
+}
+cv.addEventListener("pointermove", e => { e.preventDefault(); aimAt(e.clientX); });
+cv.addEventListener("pointerdown", e => { cv.focus(); aimAt(e.clientX); });
+addEventListener("keydown", e => {
+  if (e.key === "ArrowLeft")  { basketX -= 26; clampBasket(); e.preventDefault(); }
+  if (e.key === "ArrowRight") { basketX += 26; clampBasket(); e.preventDefault(); }
+});
+
+/* --- the fold: every drop makes the basket harder to miss with --- */
+const TAUNTS = [
+  "The basket grew. We won't discuss it.",
+  "Bigger basket. Slower presents. No comment.",
+  "It's basically a net now.",
+  "You would have to try to miss.",
+  "At this point the basket is the floor."
+];
+
+function drop() {
+  missed++;
+  basketW = Math.min(W, basketW + 30);
+  speed = Math.max(0.9, speed * 0.88);
+  clampBasket();
+  paint(TAUNTS[Math.min(missed, TAUNTS.length) - 1]);
+}
+
+function paint(extra) {
+  status.textContent = caught + " of " + NEED + " caught" + (extra ? " \u2014 " + extra : "");
+}
+
+/* --- draw --- */
+function gift(g) {
+  ctx.fillStyle = g.col;
+  ctx.fillRect(g.x - 13, g.y - 13, 26, 26);
+  ctx.fillStyle = "rgba(255,255,255,.75)";
+  ctx.fillRect(g.x - 2, g.y - 13, 4, 26);
+  ctx.fillRect(g.x - 13, g.y - 2, 26, 4);
+}
+
+function frame() {
+  ctx.clearRect(0, 0, W, H);
+
+  if (--spawn <= 0) {
+    gifts.push({ x: 24 + Math.random() * (W - 48), y: -16, col: COLORS[(Math.random() * 4) | 0] });
+    spawn = calm ? 90 : 52;
+  }
+
+  gifts = gifts.filter(g => {
+    g.y += speed;
+
+    const landed = g.y + 13 >= FLOOR && g.y - 13 <= FLOOR + BASKET_H;
+    if (landed) {
+      if (Math.abs(g.x - basketX) <= basketW / 2 + 12) {
+        caught++;
+        paint();
+        if (caught >= NEED) win("Five caught. The basket helped. Nobody saw.");
+        return false;
+      }
+    }
+    if (g.y - 13 > H) { drop(); return false; }
+    return true;
+  });
+
+  gifts.forEach(gift);
+
+  // basket
+  ctx.fillStyle = "#2B1B44";
+  ctx.fillRect(basketX - basketW / 2, FLOOR, basketW, BASKET_H);
+  ctx.fillStyle = "#FFD93D";
+  ctx.fillRect(basketX - basketW / 2, FLOOR, basketW, 5);
+
+  if (!over) raf = requestAnimationFrame(frame);
+}
+
+function win(message) {
+  if (over) return;
+  over = true;
+  cancelAnimationFrame(raf);
+  stopMercy();
+  paint();
+  clearGate(message);
+}
+
+paint();
+raf = requestAnimationFrame(frame);
+
+const stopMercy = mercy(25, () => win("Presents delivered by hand. Same result."));
+</script>
+</body>
+</html>

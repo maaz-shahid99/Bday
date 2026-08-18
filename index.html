@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Happy Birthday</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,600&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav id="flags"></nav>
+
+<main class="wrap">
+  <p class="eyebrow">You have arrived</p>
+  <h1 style="font-size:clamp(38px,11vw,64px)">Happy Birthday,</h1>
+  <h1 id="name" style="font-size:clamp(44px,13vw,76px);color:var(--pink)"></h1>
+  <p class="hint">You are officially old. Congratulations.</p>
+
+  <div class="count">
+    <div class="unit"><b id="d">00</b><span>days</span></div>
+    <div class="unit"><b id="h">00</b><span>hrs</span></div>
+    <div class="unit"><b id="m">00</b><span>min</span></div>
+    <div class="unit"><b id="s">00</b><span>sec</span></div>
+  </div>
+  <p class="hint" id="tick"></p>
+
+  <div class="card">
+    <h2 style="font-size:22px">There is a catch.</h2>
+    <p class="hint" id="toll"></p>
+    <p><a class="btn" href="gate1.html">Fine, let's go</a></p>
+  </div>
+
+  <p><button class="btn" style="background:var(--soft);color:var(--dim);font-size:13px;padding:12px 22px"
+     onclick="Prog.reset();location.reload()">Start over</button></p>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+document.getElementById("name").textContent = CONFIG.name + "!";
+document.title = "Happy Birthday, " + CONFIG.name;
+
+const target = new Date(CONFIG.birthday);
+const pad = n => String(n).padStart(2, "0");
+
+setInterval(function tick() {
+  const left = target - Date.now();
+  if (left <= 0) {
+    document.querySelector(".count").hidden = true;
+    document.getElementById("tick").textContent = "It's today. Go on then.";
+    return;
+  }
+  const s = Math.floor(left / 1000);
+  d.textContent = pad(Math.floor(s / 86400));
+  h.textContent = pad(Math.floor(s / 3600) % 24);
+  m.textContent = pad(Math.floor(s / 60) % 60);
+  document.getElementById("s").textContent = pad(s % 60);
+}, 1000);
+
+// The wall isn't a game, so the toll is everything before it.
+const WORDS = ["no","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"];
+const games = GATES.length - 1;
+document.getElementById("toll").textContent =
+  (WORDS[games] || games) + " things stand between you and your presents. "
+  + "None of them are fair.";
+
+start();
+</script>
+</body>
+</html>

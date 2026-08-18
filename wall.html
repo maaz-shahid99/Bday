@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The wall</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@1,600&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<nav id="flags"></nav>
+
+<main class="wrap" style="max-width:640px">
+  <p class="eyebrow" data-eyebrow-suffix="— no game"></p>
+  <h1 style="font-size:38px">You earned it.</h1>
+  <p class="hint">Everyone wrote something. Here it is.</p>
+
+  <h2 style="font-size:22px;margin-top:38px;text-align:left">The evidence</h2>
+  <div class="grid" id="grid"></div>
+
+  <h2 style="font-size:22px;margin-top:38px;text-align:left">The wall</h2>
+  <div class="notes" id="notes"></div>
+
+  <p class="serif" style="font-size:20px;margin:44px 0 10px">That's the whole site.</p>
+  <p class="hint">Have the best one yet.</p>
+</main>
+
+<script src="assets/app.js"></script>
+<script>
+Prog.guard();
+Prog.set(GATES.length);
+start();
+
+document.getElementById("grid").innerHTML = CONFIG.photos.map(p =>
+  `<figure class="polaroid"><img src="${p.src}" alt=""><figcaption>${p.caption}</figcaption></figure>`
+).join("");
+
+document.getElementById("notes").innerHTML = CONFIG.notes.map(n =>
+  `<div class="note">${n.text}<b>— ${n.from}</b></div>`
+).join("");
+
+setTimeout(() => confetti(140), 400);
+</script>
+</body>
+</html>
