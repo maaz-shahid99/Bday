@@ -47,6 +47,8 @@ h1,h2,.serif{font-family:"Fraunces",Georgia,serif;font-style:italic;font-weight:
   min-height:44px;touch-action:manipulation;
 }
 .btn:active{transform:translateY(1px)}
+.btn.locked{background:var(--soft);color:var(--dim);cursor:default;pointer-events:none}
+.btn.locked:active{transform:none}
 :focus-visible{outline:3px solid var(--grape);outline-offset:3px}
 
 /* cleared banner */

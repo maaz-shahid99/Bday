@@ -39,5 +39,17 @@ lives — gate numbering, the bunting, the "Next gate" links and the skip-ahead
 guard all read from it. Reorder that list and the whole site follows. This does
 mean a filename no longer tells you a gate's position: `gate2.html` is third.
 
+## Locked until the day
+
+Nothing opens before `birthday`. Until then the home page shows the countdown
+and a dead "Locked until tomorrow" button, and any gate URL typed directly
+bounces back home. It unlocks at local midnight on the day without needing a
+reload — the countdown flips the button itself when it reaches zero.
+
+To check the gates before then, add `?preview=1` to any URL. It sticks for the
+rest of the browser tab, so the whole site can be walked through.
+
+If `birthday` is unreadable, the site opens rather than locking her out.
+
 Progress saves to her phone, so she can close it and come back.
 The "Start over" button on the home page resets it.

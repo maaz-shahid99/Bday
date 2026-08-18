@@ -2,7 +2,7 @@
    EDIT THIS BLOCK ONLY. Everything below it just works.
    ========================================================== */
 const CONFIG = {
-  name: "Sharmitha",
+  name: "Sharmistha",
   birthday: "2026-08-19T00:00:00",   // next birthday, local time
   song: "assets/song.mp3",           // drop your mp3 here
 
@@ -41,6 +41,20 @@ function currentIndex() {
   return GATES.findIndex(g => g.href === file);
 }
 
+/* --- nothing opens before the day itself --- */
+const OPENS = new Date(CONFIG.birthday);
+
+function unlocked() {
+  // ?preview on any page opens the gates early so this can be checked before
+  // the day. It sticks for the tab, so the whole site can be walked through.
+  try {
+    if (location.search.indexOf("preview") > -1) sessionStorage.setItem("bday-preview", "1");
+    if (sessionStorage.getItem("bday-preview") === "1") return true;
+  } catch {}
+  // An unreadable birthday should not lock her out of her own present.
+  return isNaN(OPENS.getTime()) || Date.now() >= OPENS.getTime();
+}
+
 /* --- progress (survives a phone restart, degrades quietly) --- */
 const KEY = "bday-progress-v2";   // v2: the running order changed under old saves
 
@@ -58,11 +72,15 @@ const Prog = {
     try { localStorage.removeItem(KEY); } catch {}
     window.__prog = 0;
   },
-  // Send people back if they skip ahead by typing a URL.
+  // Send people back if they skip ahead by typing a URL, or if they turn up
+  // early. Returns false when it is sending the page somewhere else, so the
+  // caller can stop rather than carry on running against a dead page.
   guard(needs = currentIndex()) {
+    if (!unlocked()) { location.replace("index.html"); return false; }
     const at = this.get();
-    if (at >= GATES.length) return;   // finished everything; let her wander
-    if (at < needs) location.replace(GATES[at].href);
+    if (at >= GATES.length) return true;   // finished everything; let her wander
+    if (at < needs) { location.replace(GATES[at].href); return false; }
+    return true;
   }
 };
 

@@ -27,8 +27,9 @@
 
 <script src="assets/app.js"></script>
 <script>
-Prog.guard();
-Prog.set(GATES.length);
+// Only record the whole thing as finished if we are actually staying here -
+// a redirected page would otherwise mark every gate done on the way out.
+if (Prog.guard()) Prog.set(GATES.length);
 start();
 
 document.getElementById("grid").innerHTML = CONFIG.photos.map(p =>

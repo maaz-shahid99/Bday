@@ -28,7 +28,8 @@
   <div class="card">
     <h2 style="font-size:22px">There is a catch.</h2>
     <p class="hint" id="toll"></p>
-    <p><a class="btn" href="gate1.html">Fine, let's go</a></p>
+    <p><a class="btn" id="go" href="gate1.html">Fine, let's go</a></p>
+    <p class="hint" id="lockNote"></p>
   </div>
 
   <p><button class="btn" style="background:var(--soft);color:var(--dim);font-size:13px;padding:12px 22px"
@@ -43,11 +44,33 @@ document.title = "Happy Birthday, " + CONFIG.name;
 const target = new Date(CONFIG.birthday);
 const pad = n => String(n).padStart(2, "0");
 
-setInterval(function tick() {
+// Shows the gates as shut until midnight, then opens them in place - she
+// should not have to reload the page at the moment it turns.
+function paintLock() {
+  const go = document.getElementById("go");
+  const note = document.getElementById("lockNote");
+  if (unlocked()) {
+    go.classList.remove("locked");
+    go.removeAttribute("aria-disabled");
+    go.setAttribute("href", "gate1.html");
+    go.textContent = "Fine, let's go";
+    note.textContent = "";
+  } else {
+    go.classList.add("locked");
+    go.setAttribute("aria-disabled", "true");
+    go.removeAttribute("href");          // nothing to click, not even by keyboard
+    go.textContent = "Locked until tomorrow";
+    note.textContent = "None of it opens until it is actually your birthday.";
+  }
+}
+
+function tick() {
   const left = target - Date.now();
   if (left <= 0) {
     document.querySelector(".count").hidden = true;
     document.getElementById("tick").textContent = "It's today. Go on then.";
+    paintLock();                          // the gates open without a reload
+    clearInterval(clock);
     return;
   }
   const s = Math.floor(left / 1000);
@@ -55,7 +78,13 @@ setInterval(function tick() {
   h.textContent = pad(Math.floor(s / 3600) % 24);
   m.textContent = pad(Math.floor(s / 60) % 60);
   document.getElementById("s").textContent = pad(s % 60);
-}, 1000);
+}
+
+// Run it once up front - setInterval alone leaves the clock reading 00:00:00:00
+// for the first second, which next to "Locked until tomorrow" looks like the
+// countdown has already finished.
+tick();
+const clock = setInterval(tick, 1000);
 
 // The wall isn't a game, so the toll is everything before it.
 const WORDS = ["no","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten"];
@@ -64,6 +93,7 @@ document.getElementById("toll").textContent =
   (WORDS[games] || games) + " things stand between you and your presents. "
   + "None of them are fair.";
 
+paintLock();
 start();
 </script>
 </body>
