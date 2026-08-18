@@ -32,8 +32,12 @@
 if (Prog.guard()) Prog.set(GATES.length);
 start();
 
-document.getElementById("grid").innerHTML = CONFIG.photos.map(p =>
-  `<figure class="polaroid"><img src="${p.src}" alt=""><figcaption>${p.caption}</figcaption></figure>`
+// The wall shows everything; the unwrap gate only used a few of them.
+// loading="lazy" so a phone is not pulling nine photos before she scrolls.
+const shots = CONFIG.gallery || CONFIG.photos;
+document.getElementById("grid").innerHTML = shots.map(p =>
+  `<figure class="polaroid"><img src="${p.src}" alt="" loading="lazy" decoding="async">`
+  + `<figcaption>${p.caption}</figcaption></figure>`
 ).join("");
 
 document.getElementById("notes").innerHTML = CONFIG.notes.map(n =>

@@ -6,3 +6,7 @@ birthday-site.zip
 Thumbs.db
 desktop.ini
 .vscode/
+
+# camera originals - the web-ready square crops in assets/pics/ are what ships
+assets/*.jpg
+!assets/pics/
