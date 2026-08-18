@@ -17,11 +17,11 @@ const CONFIG = {
 
   // The wall at the end. Oldest first, so it builds to the last one.
   gallery: [
-    { src: "assets/pics/child-mum.jpg",    caption: "Smallest version of you." },
+    { src: "assets/pics/child-mum.jpg",    caption: "Baccha's smallest version." },
     { src: "assets/pics/2019-yellow.jpg",  caption: "The hair had plans." },
-    { src: "assets/pics/2023-tokyo.jpg",   caption: "Unimpressed, in red." },
+    { src: "assets/pics/2023-tokyo.jpg",   caption: "My angrybird in red." },
     { src: "assets/pics/2023-quiet.jpg",   caption: "No caption needed." },
-    { src: "assets/pics/2025-cafe.jpg",    caption: "Ordered everything." },
+    { src: "assets/pics/2025-cafe.jpg",    caption: "Baccha doing her happiest activity." },
     { src: "assets/pics/us-laughing.jpg",  caption: "Us." }
   ],
 
