@@ -4,7 +4,7 @@
 const CONFIG = {
   name: "Sharmistha",
   birthday: "2026-08-19T00:00:00",   // next birthday, local time
-  song: "assets/song.mp3",           // drop your mp3 here
+  song: "assets/the_mountain-birthday-490600.mp3",   // the tape
 
   photos: [
     { src: "assets/p1.jpg", caption: "2019. The haircut era." },

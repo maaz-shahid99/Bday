@@ -8,7 +8,7 @@ Everything you need to change lives in the top block of `assets/app.js`:
 
 - `name` — used in the hero, the balloon letters, and the quiz answer
 - `birthday` — the countdown target
-- `song` — put an mp3 at `assets/song.mp3`
+- `song` — path to the mp3 in `assets/`
 - `photos` — add images to `assets/`, one line each with a caption
 - `notes` — what her friends wrote
 
