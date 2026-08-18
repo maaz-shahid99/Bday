@@ -48,7 +48,6 @@ RELIGHTS.forEach((_, i) => {
 function blow(i, el) {
   if (el.classList.contains("out")) return;
   el.classList.add("out");
-  count();
 
   if (left[i] > 0) {
     left[i]--;
@@ -61,6 +60,10 @@ function blow(i, el) {
       count();
     }, 650 + Math.random() * 900);
   }
+
+  // After the relight is booked, not before - counting first let the final
+  // tap win while its own relight was still a line of code away.
+  count();
 }
 
 function count() {
