@@ -28,8 +28,8 @@ const CONFIG = {
   notes: [
     { text: "You still owe me \u20B9400 from 2021. Happy birthday.", from: "Arjun" },
     { text: "Best friend a person could rent. Love you.",           from: "Meera" },
-    { text: "Happy bday!! Sorry about the cake thing.",             from: "Dev"   },
-    { text: "Thirteen years. Not one boring day.",                  from: "Sana"  }
+    { text: "Happy bday!! Sorry if I missed something.",            from: "Dev"   },
+    { text: "Eight years. Not one boring day.",                     from: "Sana"  }
   ]
 };
 
