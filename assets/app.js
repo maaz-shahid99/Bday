@@ -198,20 +198,33 @@ function confetti(count = 90) {
   })();
 }
 
-/* --- the games all fold. this is the last resort, for whoever just sits there --- */
+/* --- last resort, for whoever is genuinely stuck ---
+   Counts idle time, not elapsed time. Call bump() whenever she gets somewhere
+   and the clock starts again, so the way out only appears if she has actually
+   stalled - it used to turn up mid-game while she was doing fine. */
 function mercy(seconds, onRelease) {
   const host = document.getElementById("status") || document.querySelector(".hint");
-  if (!host) return () => {};
+  if (!host) return { bump() {}, stop() {} };
 
-  const timer = setTimeout(() => {
-    const b = document.createElement("button");
-    b.className = "give-up";
-    b.textContent = "Fine, let you through";
-    b.onclick = () => { b.remove(); onRelease(); };
-    host.after(b);
-  }, seconds * 1000);
+  let timer = null, btn = null;
 
-  return () => clearTimeout(timer);   // call this once she actually wins
+  const show = () => {
+    if (btn) return;
+    btn = document.createElement("button");
+    btn.className = "give-up";
+    btn.textContent = "Fine, let you through";
+    btn.onclick = () => { btn.remove(); btn = null; onRelease(); };
+    host.after(btn);
+  };
+
+  const bump = () => {                 // she got somewhere; put it away again
+    clearTimeout(timer);
+    if (btn) { btn.remove(); btn = null; }
+    timer = setTimeout(show, seconds * 1000);
+  };
+
+  bump();
+  return { bump, stop() { clearTimeout(timer); if (btn) { btn.remove(); btn = null; } } };
 }
 
 /* --- called when a gate is beaten --- */

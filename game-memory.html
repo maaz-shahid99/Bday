@@ -44,9 +44,8 @@ const status = document.getElementById("status");
 
 let first = null, busy = false, misses = 0, found = 0, over = false;
 
-// The two points where the game quietly stops being a game.
-const sticky = () => misses >= 3;   // wrong pairs no longer hide again
-const gifted = () => misses >= 5;   // touching a card reveals its partner too
+// No shortcuts: a wrong pair always turns back over, however many times she
+// gets it wrong. If she genuinely stalls, mercy below is the way out.
 
 const tiles = deck.map((face, i) => {
   const b = document.createElement("button");
@@ -69,6 +68,7 @@ function lockPair(a, b) {
   });
   found++;
   paint();
+  guide.bump();                       // progress: put the way out away again
   if (found === PAIRS) win("Six pairs. Nobody doubted you.");
 }
 
@@ -78,18 +78,6 @@ function tap(i) {
   if (first === i) return;
 
   show(i);
-
-  // Past a certain amount of flailing, the cards just help.
-  if (gifted()) {
-    const partner = deck.findIndex((f, k) => f === deck[i] && k !== i && tiles[k].dataset.done !== "1");
-    if (partner > -1) {
-      show(partner);
-      if (first !== null && first !== i && first !== partner) hide(first);
-      first = null;
-      lockPair(i, partner);
-    }
-    return;
-  }
 
   if (first === null) { first = i; return; }
 
@@ -101,18 +89,17 @@ function tap(i) {
   misses++;
   paint();
 
-  if (sticky()) return;   // leave them face up; she has suffered enough
-
   busy = true;
-  setTimeout(() => { hide(a); hide(i); busy = false; }, 900);
+  setTimeout(() => { hide(a); hide(i); busy = false; }, 800);
 }
 
 const TAUNTS = [
   "Close.",
-  "That was the same card twice, nearly.",
-  "Fine \u2014 they'll stay face up now.",
-  "Still face up. Take your time.",
-  "New rule: touching a card finds its twin."
+  "Not those two.",
+  "You had that one a moment ago.",
+  "Confidently wrong.",
+  "They are not going to start helping.",
+  "Still six pairs in there somewhere."
 ];
 
 function paint() {
@@ -122,14 +109,14 @@ function paint() {
 
 function win(message) {
   over = true;
-  stopMercy();
+  guide.stop();
   tiles.forEach(t => { t.disabled = true; t.classList.add("up"); });
   status.textContent = PAIRS + " of " + PAIRS + " pairs";
   clearGate(message);
 }
 
-// If she just sits and looks at it, the gate opens anyway.
-const stopMercy = mercy(30, () => win("You waited it out. Respectable strategy."));
+// Only if she genuinely stalls - the clock restarts on every pair she finds.
+const guide = mercy(45, () => win("You waited it out. Respectable strategy."));
 </script>
 </body>
 </html>

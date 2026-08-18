@@ -30,10 +30,11 @@ Prog.guard();
 start();
 
 // How many times each candle stubbornly relights itself.
-const RELIGHTS = [0, 1, 0, 1, 3];
+const RELIGHTS = [1, 2, 1, 3, 5];
 const cake = document.getElementById("cake");
 const status = document.getElementById("status");
 const left = RELIGHTS.slice();
+let pending = 0;   // relights currently on their way back
 
 RELIGHTS.forEach((_, i) => {
   const c = document.createElement("button");
@@ -51,12 +52,14 @@ function blow(i, el) {
 
   if (left[i] > 0) {
     left[i]--;
+    pending++;                      // this one is coming back
     setTimeout(() => {
       el.classList.remove("out");
       el.classList.add("relit");
       setTimeout(() => el.classList.remove("relit"), 400);
+      pending--;
       count();
-    }, 900 + Math.random() * 700);
+    }, 650 + Math.random() * 900);
   }
 }
 
@@ -65,7 +68,11 @@ function count() {
   const total = RELIGHTS.length;
   status.textContent = out + " of " + total + " out"
     + (out < total && left[4] === 0 ? " — the last one is just tired now" : "");
-  if (out === total) {
+  // Every candle dark AND nothing queued to relight. Without the pending
+  // check, tapping all five quickly won instantly - they were all briefly
+  // "out" while their relights were still on the way, so the relight counts
+  // above may as well not have existed.
+  if (out === total && pending === 0) {
     clearGate("All out. That took longer than it should have.");
     cake.querySelectorAll(".candle").forEach(c => c.disabled = true);
   }

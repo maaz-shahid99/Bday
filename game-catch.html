@@ -108,6 +108,7 @@ function frame() {
       if (Math.abs(g.x - basketX) <= basketW / 2 + 12) {
         caught++;
         paint();
+        guide.bump();
         if (caught >= NEED) win("Five caught. The basket helped. Nobody saw.");
         return false;
       }
@@ -131,7 +132,7 @@ function win(message) {
   if (over) return;
   over = true;
   cancelAnimationFrame(raf);
-  stopMercy();
+  guide.stop();
   paint();
   clearGate(message);
 }
@@ -139,7 +140,7 @@ function win(message) {
 paint();
 raf = requestAnimationFrame(frame);
 
-const stopMercy = mercy(25, () => win("Presents delivered by hand. Same result."));
+const guide = mercy(40, () => win("Presents delivered by hand. Same result."));
 </script>
 </body>
 </html>
