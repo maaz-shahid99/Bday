@@ -6,25 +6,23 @@ const CONFIG = {
   birthday: "2026-08-19T00:00:00",   // next birthday, local time
   song: "assets/the_mountain-birthday-490600.mp3",   // the tape
 
-  // The three she has to scratch the wrapping paper off. Keep this short -
-  // every extra one is another gift to unwrap before she can move on.
+  // No photo appears twice on the site. These three are hers to scratch open
+  // and are deliberately NOT on the wall - unwrapping something you are about
+  // to see again is a wasted reveal.
   photos: [
-    { src: "assets/pics/child-bike.jpg",  caption: "Not even her bike." },
-    { src: "assets/pics/2019-garden.jpg", caption: "Aware of the camera." },
-    { src: "assets/pics/2025-cafe.jpg",   caption: "Ordered everything." }
+    { src: "assets/pics/child-bike.jpg",   caption: "Not even her bike." },
+    { src: "assets/pics/2019-garden.jpg",  caption: "Aware of the camera." },
+    { src: "assets/pics/2025-dinner.jpg",  caption: "Something more interesting." }
   ],
 
-  // The wall at the end. Oldest first, so it reads as a run-up to the last one.
+  // The wall at the end. Oldest first, so it builds to the last one.
   gallery: [
-    { src: "assets/pics/child-bike.jpg",  caption: "Not even her bike." },
-    { src: "assets/pics/child-mum.jpg",   caption: "Smallest version of you." },
-    { src: "assets/pics/2019-yellow.jpg", caption: "The hair had plans." },
-    { src: "assets/pics/2019-garden.jpg", caption: "Aware of the camera." },
-    { src: "assets/pics/2023-tokyo.jpg",  caption: "Unimpressed, in red." },
-    { src: "assets/pics/2023-quiet.jpg",  caption: "No caption needed." },
-    { src: "assets/pics/2025-dinner.jpg", caption: "Something more interesting." },
-    { src: "assets/pics/2025-cafe.jpg",   caption: "Ordered everything." },
-    { src: "assets/pics/us-laughing.jpg", caption: "Us." }
+    { src: "assets/pics/child-mum.jpg",    caption: "Smallest version of you." },
+    { src: "assets/pics/2019-yellow.jpg",  caption: "The hair had plans." },
+    { src: "assets/pics/2023-tokyo.jpg",   caption: "Unimpressed, in red." },
+    { src: "assets/pics/2023-quiet.jpg",   caption: "No caption needed." },
+    { src: "assets/pics/2025-cafe.jpg",    caption: "Ordered everything." },
+    { src: "assets/pics/us-laughing.jpg",  caption: "Us." }
   ],
 
   notes: [
