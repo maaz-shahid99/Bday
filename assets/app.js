@@ -25,11 +25,13 @@ const CONFIG = {
     { src: "assets/pics/us-laughing.jpg",  caption: "Us." }
   ],
 
+  // Unsigned. Add from: "Name" to any of these and it shows as an em dash
+  // and the name under the note; leave it off and nothing is shown.
   notes: [
-    { text: "You still owe me \u20B9400 from 2021. Happy birthday.", from: "Arjun" },
-    { text: "Best friend a person could rent. Love you.",           from: "Meera" },
-    { text: "Happy bday!! Sorry if I missed something.",            from: "Dev"   },
-    { text: "Eight years. Not one boring day.",                     from: "Sana"  }
+    { text: "You still owe me \u20B9400 from 2021. Happy birthday." },
+    { text: "Best friend a person could rent. Love you." },
+    { text: "Happy bday!! Sorry if I missed something." },
+    { text: "Eight years. Not one boring day." }
   ]
 };
 

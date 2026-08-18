@@ -40,8 +40,12 @@ document.getElementById("grid").innerHTML = shots.map(p =>
   + `<figcaption>${p.caption}</figcaption></figure>`
 ).join("");
 
+// Only sign a note that carries a name - an empty `from` used to leave a
+// stray em dash sitting under the message.
 document.getElementById("notes").innerHTML = CONFIG.notes.map(n =>
-  `<div class="note">${n.text}<b>— ${n.from}</b></div>`
+  `<div class="note">${n.text}`
+  + (n.from ? `<b>— ${n.from}</b>` : "")
+  + `</div>`
 ).join("");
 
 setTimeout(() => confetti(140), 400);
