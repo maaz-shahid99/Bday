@@ -152,6 +152,13 @@ h1,h2,.serif{font-family:"Fraunces",Georgia,serif;font-style:italic;font-weight:
 .note:nth-child(4n+3){background:var(--pink);rotate:-1deg;color:#fff}
 .note:nth-child(4n+4){background:var(--grape);rotate:2deg;color:#fff}
 
+/* preview banner - only ever seen while ?preview is on */
+.preview-flag{
+  margin:0 -20px 6px;padding:9px 14px;background:var(--ink);color:var(--paper);
+  font-size:12px;text-align:center;line-height:1.4;
+}
+.preview-flag a{color:var(--lemon);font-weight:600}
+
 /* cassette */
 .cassette{position:fixed;display:flex;align-items:center;gap:10px;
   right:calc(14px + env(safe-area-inset-right));

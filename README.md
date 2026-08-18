@@ -47,7 +47,9 @@ bounces back home. It unlocks at local midnight on the day without needing a
 reload — the countdown flips the button itself when it reaches zero.
 
 To check the gates before then, add `?preview=1` to any URL. It sticks for the
-rest of the browser tab, so the whole site can be walked through.
+rest of the browser tab, so the whole site can be walked through — every page
+then carries a dark "Preview mode" banner so an unlocked tab is never mistaken
+for a broken lock. `?preview=0` turns it off again, as does closing the tab.
 
 If `birthday` is unreadable, the site opens rather than locking her out.
 

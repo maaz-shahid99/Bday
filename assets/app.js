@@ -45,14 +45,31 @@ function currentIndex() {
 const OPENS = new Date(CONFIG.birthday);
 
 function unlocked() {
-  // ?preview on any page opens the gates early so this can be checked before
-  // the day. It sticks for the tab, so the whole site can be walked through.
+  // ?preview=1 opens the gates early so this can be checked before the day,
+  // and sticks for the tab. ?preview=0 turns it off again.
   try {
-    if (location.search.indexOf("preview") > -1) sessionStorage.setItem("bday-preview", "1");
-    if (sessionStorage.getItem("bday-preview") === "1") return true;
+    const q = new URLSearchParams(location.search).get("preview");
+    if (q === "0" || q === "off") sessionStorage.removeItem("bday-preview");
+    else if (q !== null) sessionStorage.setItem("bday-preview", "1");
+    if (previewing()) return true;
   } catch {}
   // An unreadable birthday should not lock her out of her own present.
   return isNaN(OPENS.getTime()) || Date.now() >= OPENS.getTime();
+}
+
+function previewing() {
+  try { return sessionStorage.getItem("bday-preview") === "1"; } catch { return false; }
+}
+
+// Preview used to be invisible, which made an unlocked tab look like a broken
+// lock. Say so on the page, and give it an off switch.
+function previewBanner() {
+  if (!previewing() || document.querySelector(".preview-flag")) return;
+  const b = document.createElement("div");
+  b.className = "preview-flag";
+  b.innerHTML = 'Preview mode — the gates are forced open. '
+              + 'She will not see this. <a href="?preview=0">turn it off</a>';
+  document.body.prepend(b);
 }
 
 /* --- progress (survives a phone restart, degrades quietly) --- */
@@ -205,6 +222,7 @@ function clearGate(index, message) {
 
 /* --- boot --- */
 function start(currentGate = currentIndex()) {
+  previewBanner();
   buildNav(currentGate);
 
   // "Gate 3 of 8", counted from GATES so nothing needs editing by hand.
