@@ -12,7 +12,7 @@ const CONFIG = {
   photos: [
     { src: "assets/pics/child-bike.jpg",   caption: "Not even her bike." },
     { src: "assets/pics/2019-garden.jpg",  caption: "Camera loves my baby boo." },
-    { src: "assets/pics/2025-dinner.jpg",  caption: "Something more interesting." }
+    { src: "assets/pics/2025-dinner.jpg",  caption: "I would love to paint you one day." }
   ],
 
   // The wall at the end. Oldest first, so it builds to the last one.
