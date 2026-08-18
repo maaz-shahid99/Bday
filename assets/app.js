@@ -11,7 +11,7 @@ const CONFIG = {
   // to see again is a wasted reveal.
   photos: [
     { src: "assets/pics/child-bike.jpg",   caption: "Not even her bike." },
-    { src: "assets/pics/2019-garden.jpg",  caption: "Aware of the camera." },
+    { src: "assets/pics/2019-garden.jpg",  caption: "Camera loves my baby boo." },
     { src: "assets/pics/2025-dinner.jpg",  caption: "Something more interesting." }
   ],
 
