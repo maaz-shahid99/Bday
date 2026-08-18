@@ -2,8 +2,8 @@
    EDIT THIS BLOCK ONLY. Everything below it just works.
    ========================================================== */
 const CONFIG = {
-  name: "Priya",
-  birthday: "2026-09-05T00:00:00",   // next birthday, local time
+  name: "Sharmitha",
+  birthday: "2026-08-19T00:00:00",   // next birthday, local time
   song: "assets/song.mp3",           // drop your mp3 here
 
   photos: [

@@ -82,7 +82,7 @@ h1,h2,.serif{font-family:"Fraunces",Georgia,serif;font-style:italic;font-weight:
   color:#fff;font-weight:700;font-size:20px;transition:left .35s,top .35s,transform .2s;animation:bob 3s infinite alternate}
 @keyframes bob{to{translate:0 -8px}}
 .balloon.gone{transform:scale(0);pointer-events:none}
-.spelled{font-size:26px;letter-spacing:8px;font-weight:700;margin-top:6px;min-height:34px}
+.spelled{font-size:clamp(17px,5.6vw,26px);letter-spacing:clamp(2px,1.5vw,8px);font-weight:700;margin-top:6px;min-height:34px}
 
 /* gate 3 scratch */
 .gift{position:relative;width:min(320px,80vw);aspect-ratio:1;margin:20px auto;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);background:var(--soft)}
@@ -178,7 +178,6 @@ h1,h2,.serif{font-family:"Fraunces",Georgia,serif;font-style:italic;font-weight:
 /* landscape phones are very short - give the tall game stages room to breathe */
 @media (max-height:480px) and (orientation:landscape){
   body{padding-bottom:110px}
-  .sky{height:min(340px,74vh)}
   .answers{height:min(300px,70vh)}
   .cake{margin-top:60px}
 }

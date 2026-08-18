@@ -37,6 +37,21 @@ const out = document.getElementById("spelled");
 const taunt = document.getElementById("taunt");
 
 // One balloon refuses to be caught — until it doesn't.
+// The sky grows with the name - four balloons to a row - so a long name
+// still lands inside it instead of spilling past the bottom.
+const COLS = 4, ROW = 108, BW = 52, BH = 64;
+const rows = Math.ceil(LETTERS.length / COLS);
+const skyH = rows * ROW + 24;
+sky.style.height = skyH + "px";
+
+// fx is a fraction of the room actually left over once the balloon's own
+// width is taken off, so it can never hang off the right edge.
+function put(b, fx, top) {
+  const f = Math.max(0, Math.min(1, fx));
+  b.style.left = "calc((100% - " + BW + "px) * " + f.toFixed(3) + ")";
+  b.style.top = Math.max(0, Math.min(skyH - BH, top)) + "px";
+}
+
 const RUNNER = Math.floor(Math.random() * LETTERS.length);
 let dodges = 0, popped = 0;
 const found = LETTERS.map(() => "_");
@@ -53,14 +68,17 @@ LETTERS.forEach((letter, i) => {
 });
 
 function place(b, i) {
-  b.style.left = (10 + (i % 4) * 22 + Math.random() * 8) + "%";
-  b.style.top  = (10 + Math.floor(i / 4) * 34 + Math.random() * 10) + "%";
+  const col = i % COLS, row = Math.floor(i / COLS);
+  // A short last row gets spread across the full width rather than bunched
+  // at the left - SHARMITHA leaves one balloon on its own.
+  const inRow = Math.min(COLS, LETTERS.length - row * COLS);
+  put(b, (col + 0.5) / inRow - 0.04 + Math.random() * 0.08,
+         row * ROW + 8 + Math.random() * 12);
 }
 
 function dodge(b) {
   dodges++;
-  b.style.left = (5 + Math.random() * 75) + "%";
-  b.style.top  = (5 + Math.random() * 70) + "%";
+  put(b, Math.random(), Math.random() * (skyH - BH));
   taunt.textContent = dodges < 8
     ? ["Missed.", "Not even close.", "It saw that coming.", "Try harder."][dodges % 4]
     : "Fine. It's tired. Tap it.";
